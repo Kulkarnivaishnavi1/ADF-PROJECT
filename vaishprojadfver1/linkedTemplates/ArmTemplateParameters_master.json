@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "vaishprojadfver1"
+		},
+		"ls_datalake_accountKey": {
+			"value": ""
+		},
+		"ls_onprem_file_password": {
+			"value": ""
+		},
+		"ls_datalake_properties_typeProperties_url": {
+			"value": "https://adfvaishstorage.dfs.core.windows.net/"
+		},
+		"ls_onprem_file_properties_typeProperties_host": {
+			"value": "C:\\ADF PROJECT"
+		},
+		"ls_onprem_file_properties_typeProperties_userId": {
+			"value": "Vaish"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
