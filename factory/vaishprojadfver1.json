@@ -1,0 +1,15 @@
+{
+	"name": "vaishprojadfver1",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e2310f24-5ed8-498e-bab1-ee2972120509",
+		"tenantId": "98b754d6-2daf-4d41-9c16-67a27ff25c19"
+	}
+}

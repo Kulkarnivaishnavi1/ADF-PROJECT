@@ -1,0 +1,6 @@
+{
+	"name": "vaish-self-hosted",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
