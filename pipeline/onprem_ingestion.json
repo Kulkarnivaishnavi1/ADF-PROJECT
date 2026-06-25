@@ -97,7 +97,10 @@
 				"outputs": [
 					{
 						"referenceName": "ds_onPremSink_csv",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"p_file_name": "bll"
+						}
 					}
 				]
 			}
