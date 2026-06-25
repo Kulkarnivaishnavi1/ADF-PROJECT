@@ -5,12 +5,20 @@
 			"referenceName": "ls_onprem_file",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"p_file_name": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "FileServerLocation",
-				"fileName": "DimAirline.csv"
+				"fileName": {
+					"value": "@dataset().p_file_name",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
