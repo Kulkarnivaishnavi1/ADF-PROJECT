@@ -1,0 +1,52 @@
+[
+  {
+    "airline_id": 1,
+    "airline_name": "United Airlines",
+    "country": "USA"
+  },
+  {
+    "airline_id": 2,
+    "airline_name": "Air India",
+    "country": "India"
+  },
+  {
+    "airline_id": 3,
+    "airline_name": "Delta Airlines",
+    "country": "USA"
+  },
+  {
+    "airline_id": 4,
+    "airline_name": "Qantas",
+    "country": "Australia"
+  },
+  {
+    "airline_id": 5,
+    "airline_name": "Lufthansa",
+    "country": "Germany"
+  },
+  {
+    "airline_id": 6,
+    "airline_name": "Air France",
+    "country": "France"
+  },
+  {
+    "airline_id": 7,
+    "airline_name": "Emirates",
+    "country": "UAE"
+  },
+  {
+    "airline_id": 8,
+    "airline_name": "British Airways",
+    "country": "UK"
+  },
+  {
+    "airline_id": 9,
+    "airline_name": "Singapore Airlines",
+    "country": "Singapore"
+  },
+  {
+    "airline_id": 10,
+    "airline_name": "Cathay Pacific",
+    "country": "Hong Kong"
+  }
+]
