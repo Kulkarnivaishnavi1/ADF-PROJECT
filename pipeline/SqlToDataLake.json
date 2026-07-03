@@ -1,0 +1,6 @@
+{
+	"name": "SqlToDataLake",
+	"properties": {
+		"annotations": []
+	}
+}
