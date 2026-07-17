@@ -69,15 +69,24 @@
 							{
 								"source": {
 									"path": "$['airline_id']"
+								},
+								"sink": {
+									"path": "$['airline_id']"
 								}
 							},
 							{
 								"source": {
 									"path": "$['airline_name']"
+								},
+								"sink": {
+									"path": "$['airline_name']"
 								}
 							},
 							{
 								"source": {
+									"path": "$['country']"
+								},
+								"sink": {
 									"path": "$['country']"
 								}
 							}
