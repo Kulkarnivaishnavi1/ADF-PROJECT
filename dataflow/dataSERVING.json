@@ -1,0 +1,40 @@
+{
+	"name": "dataSERVING",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceAir"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceGit"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'TFair') ~> sourceAir",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'TFgitjson') ~> sourceGit"
+			]
+		}
+	}
+}
