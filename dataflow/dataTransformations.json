@@ -179,7 +179,7 @@
 				"derivedFemale derive(gender_flag = regexReplace(gender_flag,\"M\",\"Male\")) ~> derivedMale",
 				"derivedMale filter(age>25 && country!= \"Mexico\") ~> Agegtr25",
 				"gitsrc derive(airline_name = lower(airline_name)) ~> derivedAirportNames",
-				"derivedColumn1 alterRow(upsertIf(1>0)) ~> alterRowAir",
+				"derivedColumn1 alterRow(upsertIf(1==1)) ~> alterRowAir",
 				"selectDIRCols alterRow(upsertIf(1==1)) ~> alterFL",
 				"selectPass alterRow(upsertIf(1==1)) ~> altePS",
 				"Agegtr25 alterRow(upsertIf(1==1)) ~> alterAgg",
