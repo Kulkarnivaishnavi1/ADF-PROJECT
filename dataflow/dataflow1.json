@@ -47,6 +47,15 @@
 				},
 				{
 					"name": "selectDIRCols"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "selectGender"
+				},
+				{
+					"name": "derivedFemale"
 				}
 			],
 			"scriptLines": [
@@ -95,7 +104,26 @@
 				"          arrival_time",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectDIRCols"
+				"     skipDuplicateMapOutputs: true) ~> selectDIRCols",
+				"DimPassenger select(mapColumn(",
+				"          passenger_id,",
+				"          full_name,",
+				"          gender,",
+				"          age,",
+				"          country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"DimPassenger select(mapColumn(",
+				"          passenger_id,",
+				"          full_name,",
+				"          gender_flag = gender,",
+				"          age,",
+				"          country",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectGender",
+				"selectGender derive(gender_flag = regexReplace(gender_flag,\"F\",\"Female\")) ~> derivedFemale"
 			]
 		}
 	}
