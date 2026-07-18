@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "dataTransformations",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -20,27 +20,56 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "DelimitedText2",
-						"type": "DatasetReference"
-					},
-					"name": "DimPassenger"
-				},
-				{
-					"dataset": {
-						"referenceName": "ds_factboo",
-						"type": "DatasetReference"
-					},
-					"name": "FactBookings"
-				},
-				{
-					"dataset": {
 						"referenceName": "ds_gitJson",
 						"type": "DatasetReference"
 					},
 					"name": "gitsrc"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_pass",
+						"type": "DatasetReference"
+					},
+					"name": "sourcePass"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkAirline"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkFl"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkPass"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkAgg"
+				},
+				{
+					"linkedService": {
+						"referenceName": "ls_datalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkGit"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -49,13 +78,37 @@
 					"name": "selectDIRCols"
 				},
 				{
-					"name": "select1"
+					"name": "selectPass"
 				},
 				{
 					"name": "selectGender"
 				},
 				{
 					"name": "derivedFemale"
+				},
+				{
+					"name": "derivedMale"
+				},
+				{
+					"name": "Agegtr25"
+				},
+				{
+					"name": "derivedAirportNames"
+				},
+				{
+					"name": "alterRowAir"
+				},
+				{
+					"name": "alterFL"
+				},
+				{
+					"name": "altePS"
+				},
+				{
+					"name": "alterAgg"
+				},
+				{
+					"name": "alterGit"
 				}
 			],
 			"scriptLines": [
@@ -77,6 +130,15 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> DimFlight",
 				"source(output(",
+				"          airline_id as short,",
+				"          airline_name as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> gitsrc",
+				"source(output(",
 				"          passenger_id as short,",
 				"          full_name as string,",
 				"          gender as string,",
@@ -85,17 +147,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> DimPassenger",
-				"source(output(",
-				"          {PAR1\u0015\u0000\u0015�7\u0015�7\u0015���)\u001c\u0015�} as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> FactBookings",
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> gitsrc",
+				"     ignoreNoFilesFound: false) ~> sourcePass",
 				"DimAirline derive(country = upper(country)) ~> derivedColumn1",
 				"DimFlight select(mapColumn(",
 				"          flight_id_no = flight_id,",
@@ -105,7 +157,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectDIRCols",
-				"DimPassenger select(mapColumn(",
+				"sourcePass select(mapColumn(",
 				"          passenger_id,",
 				"          full_name,",
 				"          gender,",
@@ -113,8 +165,8 @@
 				"          country",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"DimPassenger select(mapColumn(",
+				"     skipDuplicateMapOutputs: true) ~> selectPass",
+				"sourcePass select(mapColumn(",
 				"          passenger_id,",
 				"          full_name,",
 				"          gender_flag = gender,",
@@ -123,7 +175,110 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectGender",
-				"selectGender derive(gender_flag = regexReplace(gender_flag,\"F\",\"Female\")) ~> derivedFemale"
+				"selectGender derive(gender_flag = regexReplace(gender_flag,\"F\",\"Female\")) ~> derivedFemale",
+				"derivedFemale derive(gender_flag = regexReplace(gender_flag,\"M\",\"Male\")) ~> derivedMale",
+				"derivedMale filter(age>25 && country!= \"Mexico\") ~> Agegtr25",
+				"gitsrc derive(airline_name = lower(airline_name)) ~> derivedAirportNames",
+				"derivedColumn1 alterRow(upsertIf(1>0)) ~> alterRowAir",
+				"selectDIRCols alterRow(upsertIf(1==1)) ~> alterFL",
+				"selectPass alterRow(upsertIf(1==1)) ~> altePS",
+				"Agegtr25 alterRow(upsertIf(1==1)) ~> alterAgg",
+				"derivedAirportNames alterRow(upsertIf(1==1)) ~> alterGit",
+				"alterRowAir sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'airTf.csv',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['airline_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkAirline",
+				"alterFL sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'FliTF.csv',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['flight_id_no'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkFl",
+				"altePS sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'PassTF.csv',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['passenger_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkPass",
+				"alterAgg sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'Agg.csv',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['passenger_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkAgg",
+				"alterGit sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delta',",
+				"     fileSystem: 'silver',",
+				"     folderPath: 'gitjson',",
+				"     mergeSchema: false,",
+				"     autoCompact: false,",
+				"     optimizedWrite: false,",
+				"     vacuum: 0,",
+				"     deletable: false,",
+				"     insertable: false,",
+				"     updateable: false,",
+				"     upsertable: true,",
+				"     keys:['airline_id'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sinkGit"
 			]
 		}
 	}
